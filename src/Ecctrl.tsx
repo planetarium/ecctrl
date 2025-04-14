@@ -159,6 +159,8 @@ const Ecctrl: ForwardRefRenderFunction<CustomEcctrlRigidBody, EcctrlProps> = (
   let isModeFixedCamera: boolean = false;
   let isModeCameraBased: boolean = false;
   const setMoveToPoint = useGame((state) => state.setMoveToPoint);
+  const getMoveToPoint = useGame((state) => state.getMoveToPoint);
+  const setIsPointMoving = useGame((state) => state.setIsPointMoving);
   const findMode = (mode: string, modes: string) => modes.split(' ').some((m) => m === mode);
   if (mode) {
     if (findMode('PointToMove', mode)) isModePointToMove = true;
@@ -637,7 +639,6 @@ const Ecctrl: ForwardRefRenderFunction<CustomEcctrlRigidBody, EcctrlProps> = (
   let isPointMoving = false;
   const crossVector: THREE.Vector3 = useMemo(() => new THREE.Vector3(), []);
   const pointToPoint: THREE.Vector3 = useMemo(() => new THREE.Vector3(), []);
-  const getMoveToPoint = useGame((state) => state.getMoveToPoint);
   const bodySensorRef = useRef<Collider>();
   const handleOnIntersectionEnter = () => {
     isBodyHitWall = true;
@@ -822,11 +823,13 @@ const Ecctrl: ForwardRefRenderFunction<CustomEcctrlRigidBody, EcctrlProps> = (
       // stop moving
       if (characterRef.current) {
         if (pointToPoint.length() > 0.3 && !isBodyHitWall && !functionKeyDown) {
-          moveCharacter(delta, false, slopeAngle, movingObjectVelocity);
+          moveCharacter(delta, true, slopeAngle, movingObjectVelocity);
           isPointMoving = true;
+          setIsPointMoving(true);
         } else {
           setMoveToPoint(null);
           isPointMoving = false;
+          setIsPointMoving(false);
         }
       }
     }
@@ -1330,7 +1333,7 @@ const Ecctrl: ForwardRefRenderFunction<CustomEcctrlRigidBody, EcctrlProps> = (
     /**
      * Apply drag force if it's not moving
      */
-    if (!isMoving && canJump) {
+    if (!isMoving && !isPointMoving && canJump) {
       dragForce.set(-currentVel.x * dragDampingC, 0, -currentVel.z * dragDampingC);
       characterRef.current.applyImpulse(dragForce, false);
     }

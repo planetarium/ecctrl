@@ -1,6 +1,6 @@
-import * as THREE from "three";
-import { create } from "zustand";
-import { subscribeWithSelector } from "zustand/middleware";
+import * as THREE from 'three';
+import { create } from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware';
 
 export const useGame = /* @__PURE__ */ create(
   /* @__PURE__ */ subscribeWithSelector<State>((set, get) => {
@@ -9,6 +9,11 @@ export const useGame = /* @__PURE__ */ create(
        * Point to move point
        */
       moveToPoint: null as THREE.Vector3,
+
+      /**
+       * Point to move state
+       */
+      isPointMoving: false,
 
       /**
        * Character animations state manegement
@@ -159,8 +164,23 @@ export const useGame = /* @__PURE__ */ create(
           moveToPoint: get().moveToPoint,
         };
       },
+
+      /**
+       * Set/get point moving state
+       */
+      setIsPointMoving: (isMoving: boolean) => {
+        set(() => {
+          return { isPointMoving: isMoving };
+        });
+      },
+
+      getIsPointMoving: () => {
+        return {
+          isPointMoving: get().isPointMoving,
+        };
+      },
     };
-  })
+  }),
 );
 
 export type AnimationSet = {
@@ -180,6 +200,7 @@ export type AnimationSet = {
 
 type State = {
   moveToPoint: THREE.Vector3;
+  isPointMoving: boolean;
   curAnimation: string;
   animationSet: AnimationSet;
   initializeAnimationSet: (animationSet: AnimationSet) => void;
@@ -187,7 +208,11 @@ type State = {
   setMoveToPoint: (point: THREE.Vector3) => void;
   getMoveToPoint: () => {
     moveToPoint: THREE.Vector3;
-  }
+  };
+  setIsPointMoving: (isMoving: boolean) => void;
+  getIsPointMoving: () => {
+    isPointMoving: boolean;
+  };
 } & {
   [key in keyof AnimationSet]: () => void;
 };

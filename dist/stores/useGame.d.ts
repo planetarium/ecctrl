@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 export declare const useGame: import("zustand").UseBoundStore<Omit<import("zustand").StoreApi<State>, "subscribe"> & {
     subscribe: {
         (listener: (selectedState: State, previousSelectedState: State) => void): () => void;
@@ -23,6 +23,7 @@ export type AnimationSet = {
 };
 type State = {
     moveToPoint: THREE.Vector3;
+    isPointMoving: boolean;
     curAnimation: string;
     animationSet: AnimationSet;
     initializeAnimationSet: (animationSet: AnimationSet) => void;
@@ -30,6 +31,10 @@ type State = {
     setMoveToPoint: (point: THREE.Vector3) => void;
     getMoveToPoint: () => {
         moveToPoint: THREE.Vector3;
+    };
+    setIsPointMoving: (isMoving: boolean) => void;
+    getIsPointMoving: () => {
+        isPointMoving: boolean;
     };
 } & {
     [key in keyof AnimationSet]: () => void;

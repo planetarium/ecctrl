@@ -269,6 +269,10 @@ const useGame = /* @__PURE__ */ zustand.create(
        */
       moveToPoint: null,
       /**
+       * Point to move state
+       */
+      isPointMoving: false,
+      /**
        * Character animations state manegement
        */
       // Initial animation
@@ -390,6 +394,19 @@ const useGame = /* @__PURE__ */ zustand.create(
       getMoveToPoint: () => {
         return {
           moveToPoint: get().moveToPoint
+        };
+      },
+      /**
+       * Set/get point moving state
+       */
+      setIsPointMoving: (isMoving) => {
+        set(() => {
+          return { isPointMoving: isMoving };
+        });
+      },
+      getIsPointMoving: () => {
+        return {
+          isPointMoving: get().isPointMoving
         };
       }
     };
@@ -970,6 +987,8 @@ const Ecctrl = ({
   let isModeFixedCamera = false;
   let isModeCameraBased = false;
   const setMoveToPoint = useGame((state) => state.setMoveToPoint);
+  const getMoveToPoint = useGame((state) => state.getMoveToPoint);
+  const setIsPointMoving = useGame((state) => state.setIsPointMoving);
   const findMode = (mode2, modes) => modes.split(" ").some((m) => m === mode2);
   if (mode) {
     if (findMode("PointToMove", mode)) isModePointToMove = true;
@@ -1377,9 +1396,9 @@ const Ecctrl = ({
   const slopeRayCast = new rapier$1.Ray(slopeRayorigin, slopeRayDir);
   let slopeRayHit = null;
   let isBodyHitWall = false;
+  let isPointMoving = false;
   const crossVector = React.useMemo(() => new THREE__namespace.Vector3(), []);
   const pointToPoint = React.useMemo(() => new THREE__namespace.Vector3(), []);
-  const getMoveToPoint = useGame((state) => state.getMoveToPoint);
   const bodySensorRef = React.useRef();
   const handleOnIntersectionEnter = () => {
     isBodyHitWall = true;
@@ -1480,9 +1499,13 @@ const Ecctrl = ({
       if (isModeFixedCamera) pivot.rotation.y = THREE__namespace.MathUtils.lerp(pivot.rotation.y, modelEuler.y, fixedCamRotMult * delta * 3);
       if (characterRef.current) {
         if (pointToPoint.length() > 0.3 && !isBodyHitWall && !functionKeyDown2) {
-          moveCharacter(delta, false, slopeAngle2, movingObjectVelocity2);
+          moveCharacter(delta, true, slopeAngle2, movingObjectVelocity2);
+          isPointMoving = true;
+          setIsPointMoving(true);
         } else {
           setMoveToPoint(null);
+          isPointMoving = false;
+          setIsPointMoving(false);
         }
       }
     }
@@ -1813,7 +1836,7 @@ const Ecctrl = ({
         (_d = rayHit.collider.parent()) == null ? void 0 : _d.applyImpulseAtPoint(characterMassForce, standingForcePoint, true);
       }
     }
-    if (!isMoving && canJump) {
+    if (!isMoving && !isPointMoving && canJump) {
       dragForce.set(-currentVel.x * dragDampingC, 0, -currentVel.z * dragDampingC);
       characterRef.current.applyImpulse(dragForce, false);
     }
