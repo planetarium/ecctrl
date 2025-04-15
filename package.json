@@ -1,9 +1,9 @@
 {
-  "name": "ecctrl",
-  "version": "1.0.92",
-  "author": "Erdong Chen",
+  "name": "vibe-starter-3d-ctrl",
+  "version": "0.0.1",
+  "author": "planetarium",
   "license": "MIT",
-  "description": "A floating rigibody character controller for R3F",
+  "description": "forked project ecctrl",
   "keywords": [
     "react",
     "three",
