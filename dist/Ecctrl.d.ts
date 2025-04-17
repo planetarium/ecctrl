@@ -23,7 +23,7 @@ export interface DesiredMovement {
      */
     desiredRun?: boolean;
 }
-declare const _default: React.ForwardRefExoticComponent<EcctrlProps & React.RefAttributes<CustomEcctrlRigidBody>>;
+declare const _default: React.ForwardRefExoticComponent<Omit<EcctrlProps, "ref"> & React.RefAttributes<CustomEcctrlRigidBody>>;
 export default _default;
 export type camListenerTargetType = 'document' | 'domElement';
 export interface CustomEcctrlRigidBody extends RapierRigidBody {
