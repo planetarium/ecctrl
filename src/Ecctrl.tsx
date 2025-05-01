@@ -161,6 +161,7 @@ const Ecctrl: ForwardRefRenderFunction<CustomEcctrlRigidBody, EcctrlProps> = (
   const setMoveToPoint = useGame((state) => state.setMoveToPoint);
   const getMoveToPoint = useGame((state) => state.getMoveToPoint);
   const setIsPointMoving = useGame((state) => state.setIsPointMoving);
+  const enableInput = useGame((state) => state.getEnableInput);
   const findMode = (mode: string, modes: string) => modes.split(' ').some((m) => m === mode);
   if (mode) {
     if (findMode('PointToMove', mode)) isModePointToMove = true;
@@ -1331,9 +1332,11 @@ const Ecctrl: ForwardRefRenderFunction<CustomEcctrlRigidBody, EcctrlProps> = (
     }
 
     /**
-     * Apply drag force if it's not moving
+     * Reset x,z velocity if enableInput is false or Apply drag force if it's not moving
      */
-    if (!isMoving && !isPointMoving && canJump) {
+    if (!enableInput()) {
+      characterRef.current.setLinvel(new THREE.Vector3(0, characterRef.current.linvel().y, 0), false);
+    } else if (!isMoving && !isPointMoving && canJump) {
       dragForce.set(-currentVel.x * dragDampingC, 0, -currentVel.z * dragDampingC);
       characterRef.current.applyImpulse(dragForce, false);
     }

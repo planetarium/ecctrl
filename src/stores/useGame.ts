@@ -5,6 +5,13 @@ import { subscribeWithSelector } from 'zustand/middleware';
 export const useGame = /* @__PURE__ */ create(
   /* @__PURE__ */ subscribeWithSelector<State>((set, get) => {
     return {
+      enableInput: true,
+      setEnableInput: (enable: boolean) => {
+        set({ enableInput: enable });
+      },
+      getEnableInput: () => {
+        return get().enableInput;
+      },
       /**
        * Point to move point
        */
@@ -199,6 +206,9 @@ export type AnimationSet = {
 };
 
 type State = {
+  enableInput: boolean;
+  setEnableInput: (enable: boolean) => void;
+  getEnableInput: () => boolean;
   moveToPoint: THREE.Vector3;
   isPointMoving: boolean;
   curAnimation: string;

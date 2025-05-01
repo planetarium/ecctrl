@@ -3,3 +3,4 @@ node_modules
 .vscode
 exampleDist
 .idea
+pnpm-lock.yaml
