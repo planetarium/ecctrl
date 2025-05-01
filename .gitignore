@@ -4,3 +4,4 @@ node_modules
 exampleDist
 .idea
 pnpm-lock.yaml
+dist
