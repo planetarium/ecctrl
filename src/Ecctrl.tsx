@@ -162,6 +162,12 @@ const Ecctrl: ForwardRefRenderFunction<CustomEcctrlRigidBody, EcctrlProps> = (
   const getMoveToPoint = useGame((state) => state.getMoveToPoint);
   const setIsPointMoving = useGame((state) => state.setIsPointMoving);
   const enableInput = useGame((state) => state.getEnableInput);
+  const getNextPosition = useGame((state) => state.getPosition);
+  const setNextPosition = useGame((state) => state.setPosition);
+  const getNextRotation = useGame((state) => state.getRotation);
+  const setNextRotation = useGame((state) => state.setRotation);
+  const getNextVelocity = useGame((state) => state.getVelocity);
+  const setNextVelocity = useGame((state) => state.setVelocity);
   const findMode = (mode: string, modes: string) => modes.split(' ').some((m) => m === mode);
   if (mode) {
     if (findMode('PointToMove', mode)) isModePointToMove = true;
@@ -997,6 +1003,25 @@ const Ecctrl: ForwardRefRenderFunction<CustomEcctrlRigidBody, EcctrlProps> = (
 
   useFrame((state, delta) => {
     if (delta > 1) delta %= 1;
+
+    const nextPosition = getNextPosition().position;
+    const nextRotation = getNextRotation().rotation;
+    const nextVelocity = getNextVelocity().velocity;
+    if (nextPosition || nextRotation || nextVelocity) {
+      if (nextPosition) {
+        characterRef.current.setTranslation(nextPosition, true);
+        setNextPosition(null);
+      }
+      if (nextRotation) {
+        modelEuler.copy(new THREE.Euler().setFromQuaternion(nextRotation));
+        setNextRotation(null);
+      }
+      if (nextVelocity) {
+        characterRef.current.setLinvel(nextVelocity, true);
+        setNextVelocity(null);
+      }
+      return;
+    }
 
     // Character current position/velocity
     if (characterRef.current) {

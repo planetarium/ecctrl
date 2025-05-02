@@ -5,13 +5,11 @@ import { subscribeWithSelector } from 'zustand/middleware';
 export const useGame = /* @__PURE__ */ create(
   /* @__PURE__ */ subscribeWithSelector<State>((set, get) => {
     return {
+      /**
+       * Enable input
+       */
       enableInput: true,
-      setEnableInput: (enable: boolean) => {
-        set({ enableInput: enable });
-      },
-      getEnableInput: () => {
-        return get().enableInput;
-      },
+
       /**
        * Point to move point
        */
@@ -21,6 +19,21 @@ export const useGame = /* @__PURE__ */ create(
        * Point to move state
        */
       isPointMoving: false,
+
+      /**
+       * Next position
+       */
+      nextPosition: null as THREE.Vector3,
+
+      /**
+       * Next rotation
+       */
+      nextRotation: null as THREE.Quaternion,
+
+      /**
+       * Next velocity
+       */
+      nextVelocity: null as THREE.Vector3,
 
       /**
        * Character animations state manegement
@@ -158,6 +171,16 @@ export const useGame = /* @__PURE__ */ create(
       // }
 
       /**
+       * Set/get enable input
+       */
+      setEnableInput: (enable: boolean) => {
+        set({ enableInput: enable });
+      },
+      getEnableInput: () => {
+        return get().enableInput;
+      },
+
+      /**
        * Set/get point to move point
        */
       setMoveToPoint: (point: THREE.Vector3) => {
@@ -186,6 +209,51 @@ export const useGame = /* @__PURE__ */ create(
           isPointMoving: get().isPointMoving,
         };
       },
+
+      /**
+       * Set/get next position
+       */
+      setPosition: (position: THREE.Vector3) => {
+        set(() => {
+          return { nextPosition: position };
+        });
+      },
+
+      getPosition: () => {
+        return {
+          position: get().nextPosition,
+        };
+      },
+
+      /**
+       * Set/get next rotation
+       */
+      setRotation: (rotation: THREE.Quaternion) => {
+        set(() => {
+          return { nextRotation: rotation };
+        });
+      },
+
+      getRotation: () => {
+        return {
+          rotation: get().nextRotation,
+        };
+      },
+
+      /**
+       * Set/get next velocity
+       */
+      setVelocity: (velocity: THREE.Vector3) => {
+        set(() => {
+          return { nextVelocity: velocity };
+        });
+      },
+
+      getVelocity: () => {
+        return {
+          velocity: get().nextVelocity,
+        };
+      },
     };
   }),
 );
@@ -207,8 +275,9 @@ export type AnimationSet = {
 
 type State = {
   enableInput: boolean;
-  setEnableInput: (enable: boolean) => void;
-  getEnableInput: () => boolean;
+  nextPosition: THREE.Vector3;
+  nextRotation: THREE.Quaternion;
+  nextVelocity: THREE.Vector3;
   moveToPoint: THREE.Vector3;
   isPointMoving: boolean;
   curAnimation: string;
@@ -222,6 +291,20 @@ type State = {
   setIsPointMoving: (isMoving: boolean) => void;
   getIsPointMoving: () => {
     isPointMoving: boolean;
+  };
+  setEnableInput: (enable: boolean) => void;
+  getEnableInput: () => boolean;
+  setPosition: (position: THREE.Vector3) => void;
+  getPosition: () => {
+    position: THREE.Vector3;
+  };
+  setRotation: (rotation: THREE.Quaternion) => void;
+  getRotation: () => {
+    rotation: THREE.Quaternion;
+  };
+  setVelocity: (velocity: THREE.Vector3) => void;
+  getVelocity: () => {
+    velocity: THREE.Vector3;
   };
 } & {
   [key in keyof AnimationSet]: () => void;
