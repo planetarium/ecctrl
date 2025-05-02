@@ -284,7 +284,7 @@ type State = {
   animationSet: AnimationSet;
   initializeAnimationSet: (animationSet: AnimationSet) => void;
   reset: () => void;
-  setMoveToPoint: (point: THREE.Vector3) => void;
+  setMoveToPoint: (point: THREE.Vector3 | null) => void;
   getMoveToPoint: () => {
     moveToPoint: THREE.Vector3;
   };
