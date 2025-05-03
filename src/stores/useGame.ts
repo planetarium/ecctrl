@@ -285,27 +285,17 @@ type State = {
   initializeAnimationSet: (animationSet: AnimationSet) => void;
   reset: () => void;
   setMoveToPoint: (point: THREE.Vector3 | null) => void;
-  getMoveToPoint: () => {
-    moveToPoint: THREE.Vector3;
-  };
+  getMoveToPoint: () => { moveToPoint: THREE.Vector3 };
   setIsPointMoving: (isMoving: boolean) => void;
-  getIsPointMoving: () => {
-    isPointMoving: boolean;
-  };
+  getIsPointMoving: () => { isPointMoving: boolean };
   setEnableInput: (enable: boolean) => void;
   getEnableInput: () => boolean;
-  setPosition: (position: THREE.Vector3) => void;
-  getPosition: () => {
-    position: THREE.Vector3;
-  };
-  setRotation: (rotation: THREE.Quaternion) => void;
-  getRotation: () => {
-    rotation: THREE.Quaternion;
-  };
-  setVelocity: (velocity: THREE.Vector3) => void;
-  getVelocity: () => {
-    velocity: THREE.Vector3;
-  };
+  setPosition: (position: THREE.Vector3 | null) => void;
+  getPosition: () => { position: THREE.Vector3 };
+  setRotation: (rotation: THREE.Quaternion | null) => void;
+  getRotation: () => { rotation: THREE.Quaternion };
+  setVelocity: (velocity: THREE.Vector3 | null) => void;
+  getVelocity: () => { velocity: THREE.Vector3 };
 } & {
   [key in keyof AnimationSet]: () => void;
 };
