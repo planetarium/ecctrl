@@ -52,6 +52,7 @@ const getMovingDirection = (forward: boolean, backward: boolean, leftward: boole
 const Ecctrl: ForwardRefRenderFunction<React.RefObject<RapierRigidBody>, EcctrlProps> = (
   {
     children,
+    followLightRef,
     debug = false,
     capsuleHalfHeight = 0.35,
     capsuleRadius = 0.3,
@@ -837,12 +838,7 @@ const Ecctrl: ForwardRefRenderFunction<React.RefObject<RapierRigidBody>, EcctrlP
   };
 
   useEffect(() => {
-    // Initialize directional light
-    if (followLight) {
-      dirLight = characterModelRef.current.parent.parent.children.find((item) => {
-        return item.name === 'followLight';
-      }) as THREE.DirectionalLight;
-    }
+    dirLight = followLightRef?.current;
   });
 
   /**
@@ -1465,6 +1461,7 @@ export type camListenerTargetType = 'document' | 'domElement';
 
 export interface EcctrlProps extends RigidBodyProps {
   children?: ReactNode;
+  followLightRef?: React.RefObject<THREE.DirectionalLight>;
   debug?: boolean;
   capsuleHalfHeight?: number;
   capsuleRadius?: number;
