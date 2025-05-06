@@ -989,6 +989,7 @@ const Ecctrl: ForwardRefRenderFunction<React.RefObject<RapierRigidBody>, EcctrlP
       }
       if (nextRotation) {
         modelEuler.copy(new THREE.Euler().setFromQuaternion(nextRotation));
+        pivot.rotation.copy(new THREE.Euler().setFromQuaternion(nextRotation));
         setNextRotation(null);
       }
       if (nextVelocity) {
