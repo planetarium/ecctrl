@@ -1076,10 +1076,11 @@ const Ecctrl: ForwardRefRenderFunction<React.RefObject<RapierRigidBody>, EcctrlP
       if (desiredJump && canJump) {
         jumpVelocityVec.set(currentVel.x, desiredRun ? sprintJumpMult * jumpVel : jumpVel, currentVel.z);
         // Apply slope normal to jump direction
+        const jumpNormalVec = actualSlopeAngle !== null && actualSlopeAngle < slopeMaxAngle && slopeRayHit ? actualSlopeNormalVec : floorNormal;
         characterRef.current.setLinvel(
           jumpDirection
             .set(0, (desiredRun ? sprintJumpMult * jumpVel : jumpVel) * slopJumpMult, 0)
-            .projectOnVector(actualSlopeNormalVec)
+            .projectOnVector(jumpNormalVec)
             .add(jumpVelocityVec),
           true,
         );
@@ -1137,10 +1138,11 @@ const Ecctrl: ForwardRefRenderFunction<React.RefObject<RapierRigidBody>, EcctrlP
         // characterRef.current.applyImpulse(jumpDirection.set(0, 0.5, 0), true);
         jumpVelocityVec.set(currentVel.x, run ? sprintJumpMult * jumpVel : jumpVel, currentVel.z);
         // Apply slope normal to jump direction
+        const jumpNormalVec = actualSlopeAngle !== null && actualSlopeAngle < slopeMaxAngle && slopeRayHit ? actualSlopeNormalVec : floorNormal;
         characterRef.current.setLinvel(
           jumpDirection
             .set(0, (run ? sprintJumpMult * jumpVel : jumpVel) * slopJumpMult, 0)
-            .projectOnVector(actualSlopeNormalVec)
+            .projectOnVector(jumpNormalVec)
             .add(jumpVelocityVec),
           true,
         );
@@ -1214,9 +1216,7 @@ const Ecctrl: ForwardRefRenderFunction<React.RefObject<RapierRigidBody>, EcctrlP
     // );
 
     if (rayHit && rayHit.timeOfImpact < floatingDis + rayHitForgiveness) {
-      if (slopeRayHit && actualSlopeAngle < slopeMaxAngle) {
-        canJump = true;
-      }
+      canJump = true;
     } else {
       canJump = false;
     }
