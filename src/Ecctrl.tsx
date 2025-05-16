@@ -52,13 +52,11 @@ const getMovingDirection = (forward: boolean, backward: boolean, leftward: boole
 const Ecctrl: ForwardRefRenderFunction<React.RefObject<RapierRigidBody>, EcctrlProps> = (
   {
     children,
-    followLightRef,
     debug = false,
     capsuleHalfHeight = 0.35,
     capsuleRadius = 0.3,
     floatHeight = 0.3,
     characterInitDir = 0, // in rad
-    followLight = false,
     disableControl = false,
     disableFollowCam = false,
     disableFollowCamPos = null,
@@ -561,11 +559,6 @@ const Ecctrl: ForwardRefRenderFunction<React.RefObject<RapierRigidBody>, EcctrlP
   const velocityDiff: THREE.Vector3 = useMemo(() => new THREE.Vector3(), []);
 
   /**
-   * Initial light setup
-   */
-  let dirLight: THREE.DirectionalLight = null;
-
-  /**
    * Follow camera initial setups from props
    */
   const cameraSetups = {
@@ -837,10 +830,6 @@ const Ecctrl: ForwardRefRenderFunction<React.RefObject<RapierRigidBody>, EcctrlP
     }
   };
 
-  useEffect(() => {
-    dirLight = followLightRef?.current;
-  });
-
   /**
    * Keyboard controls subscribe setup
    */
@@ -1008,16 +997,6 @@ const Ecctrl: ForwardRefRenderFunction<React.RefObject<RapierRigidBody>, EcctrlP
       (characterRef.current.userData as userDataType).slopeAngle = slopeAngle;
       (characterRef.current.userData as userDataType).characterRotated = characterRotated;
       (characterRef.current.userData as userDataType).isOnMovingObject = isOnMovingObject;
-    }
-
-    /**
-     * Apply character position to directional light
-     */
-    if (followLight && dirLight) {
-      dirLight.position.x = currentPos.x + followLightPos.x;
-      dirLight.position.y = currentPos.y + followLightPos.y;
-      dirLight.position.z = currentPos.z + followLightPos.z;
-      dirLight.target = characterModelRef.current;
     }
 
     /**
@@ -1462,13 +1441,11 @@ export type camListenerTargetType = 'document' | 'domElement';
 
 export interface EcctrlProps extends RigidBodyProps {
   children?: ReactNode;
-  followLightRef?: React.RefObject<THREE.DirectionalLight>;
   debug?: boolean;
   capsuleHalfHeight?: number;
   capsuleRadius?: number;
   floatHeight?: number;
   characterInitDir?: number;
-  followLight?: boolean;
   disableControl?: boolean;
   disableFollowCam?: boolean;
   disableFollowCamPos?: { x: number; y: number; z: number };
