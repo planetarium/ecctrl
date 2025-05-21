@@ -1401,7 +1401,10 @@ const Ecctrl: ForwardRefRenderFunction<React.RefObject<RapierRigidBody>, EcctrlP
       position={props.position || [0, 5, 0]}
       friction={props.friction || -0.5}
       onContactForce={(e) => bodyContactForce.set(e.totalForce.x, e.totalForce.y, e.totalForce.z)}
-      onCollisionExit={() => bodyContactForce.set(0, 0, 0)}
+      onCollisionExit={(payload) => {
+        bodyContactForce.set(0, 0, 0);
+        props.onCollisionExit?.(payload);
+      }}
       userData={{ canJump: false }}
       {...props}
     >
